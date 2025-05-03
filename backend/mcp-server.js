@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const dotenv = require('dotenv');
-const { getSonarrData } = require('./helpers/sonarr');
+const { getSonarrData, getSonarrAvailableSeries, getSonarrAvailableEpisodes } = require('./helpers/sonarr');
 
 // Initialize dotenv
 dotenv.config();
@@ -46,10 +46,10 @@ const capabilities = {
     }
   },
   'content-management': {
-    description: 'Manage media content through Sonarr',
+    description: 'Determine what content is available on the server',
     actions: {
       getSeries: {
-        description: 'Get all TV series',
+        description: 'Get all TV series available on the server',
         handler: async () => {
           return await getSonarrData('series');
         }
@@ -63,15 +63,26 @@ const capabilities = {
           return await getSonarrData(`series/${id}`);
         }
       },
-      lookupSeriesByName: {
-        description: 'Search for a series by name',
+      getSonarrAvailableSeries: {
+        description: 'Search for series available on the server by name',
         parameters: {
           query: { type: 'string', description: 'The query from the user' }
         },
         handler: async (params) => {
-          console.log('lookupSeriesByName handler called with params:', params);
+          console.log('getSonarrAvailableSeries handler called with params:', params);
           console.log('Searching for series with query:', params.query);
-          return await getSonarrData(`series/lookup?term=${params.query}`);
+          return await getSonarrAvailableSeries(params.query);
+        }
+      },
+      getSonarrAvailableEpisodes: {
+        description: 'Search for episodes of a series available on the server by local series ID',
+        parameters: {
+          query: { type: 'string', description: 'The ID of the series on local' }
+        },
+        handler: async (params) => {
+          console.log('getSonarrAvailableEpisodes handler called with params:', params);
+          console.log('Searching for episodes with localseriesId:', params.query);
+          return await getSonarrAvailableEpisodes(params.query);
         }
       }
     }
@@ -92,6 +103,7 @@ app.get('/api/capabilities', (req, res) => {
 });
 
 app.post('/api/execute', async (req, res) => {
+  console.log('Route /api/execute with req.body = ', req.body)
   try {
     console.log('Route /api/execute with req.body = ', req.body)
     const { capability, action, parameters } = req.body;
@@ -104,6 +116,7 @@ app.post('/api/execute', async (req, res) => {
       throw new Error(`Action ${action} not found in capability ${capability}`);
     }
     
+    console.log('executing action:', action, 'with parameters:', parameters)
     const result = await capabilities[capability].actions[action].handler(parameters);
     res.json(result);
   } catch (error) {
