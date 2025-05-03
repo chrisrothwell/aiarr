@@ -1,90 +1,79 @@
-# AIARR - Media Control Chat
+# AIARR - AI-Powered Media Server Assistant
 
-A conversational interface for managing your media with Overseerr and Sonarr using OpenAI's GPT-4.
+AIARR is a chatbot interface that allows users to interact with their media server (Overseerr and Sonarr) using natural language. The application uses OpenAI's GPT model to understand user queries and provides relevant information about media requests and content.
 
 ## Features
 
-- Natural language chat interface powered by OpenAI GPT-4
-- Search for movies and TV shows across Overseerr and Sonarr
-- Request media through simple conversation
-- Modern, responsive UI built with Next.js and Tailwind CSS
+- ChatGPT-like interface for natural language interaction
+- Integration with Overseerr for request management
+- Integration with Sonarr for media management
+- Real-time chat responses
+- Modern UI with Tailwind CSS
 
 ## Prerequisites
 
-- Node.js 18.x or later
+- Node.js (v14 or higher)
 - npm or yarn
-- Running instances of Overseerr and Sonarr
 - OpenAI API key
+- Overseerr instance
+- Sonarr instance
 
 ## Setup
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/aiarr.git
+git clone <repository-url>
 cd aiarr
 ```
 
 2. Install dependencies:
 ```bash
-npm install
-# or
-yarn install
+npm run install-all
 ```
 
-3. Create a `.env.local` file in the root directory with the following variables:
-```env
-# OpenAI Configuration
-OPENAI_API_KEY=your_openai_api_key
-
-# Overseerr Configuration
+3. Create a `.env` file in the root directory with the following variables:
+```
+OPENAI_API_KEY=your_openai_api_key_here
+OVERSEERR_API_KEY=your_overseerr_api_key_here
 OVERSEERR_URL=http://localhost:5055
-OVERSEERR_API_KEY=your_overseerr_api_key
-
-# Sonarr Configuration
+SONARR_API_KEY=your_sonarr_api_key_here
 SONARR_URL=http://localhost:8989
-SONARR_API_KEY=your_sonarr_api_key
-
-# Next.js Configuration
-NEXT_PUBLIC_API_URL=http://localhost:3000
+PORT=3001
 ```
 
-4. Start the development server:
+4. Start the development servers:
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+This will start both the backend server and the frontend development server.
 
-## Usage
+## Project Structure
 
-Simply type your requests in natural language. For example:
-- "Find the movie Inception"
-- "Search for TV shows about space"
-- "Request the latest season of Stranger Things"
+- `backend/` - Contains the Express server and MCP server
+  - `server.js` - Main server with OpenAI integration
+  - `mcp-server.js` - Model Context Protocol server for Overseerr and Sonarr
+- `frontend/` - React application
+  - `src/components/` - React components
+  - `src/App.tsx` - Main application component
 
-The AI will understand your request, search for the content, and help you make the request if desired.
+## API Endpoints
 
-## Environment Variables
+### Backend Server (Port 3001)
+- `POST /api/chat` - Send chat messages to OpenAI
 
-- `OPENAI_API_KEY`: Your OpenAI API key
-- `OVERSEERR_URL`: The URL of your Overseerr instance
-- `OVERSEERR_API_KEY`: Your Overseerr API key
-- `SONARR_URL`: The URL of your Sonarr instance
-- `SONARR_API_KEY`: Your Sonarr API key
-- `NEXT_PUBLIC_API_URL`: The URL of your Next.js application
+### MCP Server (Port 3002)
+- `GET /api/requests` - Get Overseerr requests
+- `GET /api/series` - Get Sonarr series
 
-## Technologies Used
+## Contributing
 
-- Next.js 14
-- React 18
-- TypeScript
-- Tailwind CSS
-- OpenAI GPT-4
-- React Query
-- Axios
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-MIT 
+This project is licensed under the MIT License - see the LICENSE file for details. 
