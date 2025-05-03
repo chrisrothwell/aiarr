@@ -112,8 +112,7 @@ When a user asks about media requests or content, use the appropriate MCP action
     
     if (messageResponse.tool_calls) {
       console.log('Executing tool: ', messageResponse.tool_calls[0].function)
-      //const { capability, action, parameters } = await normalizeOpenAIToolsResponse(messageResponse.tool_calls[0].function.arguments);
-      const { capability, action, parameters } = messageResponse.tool_calls[0].function.arguments;
+      const { capability, action, parameters } = await normalizeOpenAIToolsResponse(messageResponse.tool_calls[0].function.arguments);
       console.log('Executing MCP action:', capability, action, parameters);
       const result = await executeMCPAction(capability, action, parameters);
       

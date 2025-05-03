@@ -8,45 +8,23 @@ require('dotenv').config();
  * @returns {Promise<object>} - Transformed Sonarr data
  */
 
-async function getSonarrData(endpoint, params = {}) {
-   console.log('Calling Sonarr API:', endpoint, params);
+async function getSonarrData(endpoint) {
+   console.log('Calling Sonarr API:', endpoint);
    try {   
     const response = await axios.get(`${process.env.SONARR_URL}/api/v3/${endpoint}`, {
       headers: {
         'X-Api-Key': process.env.SONARR_API_KEY
-      },
-      params
+      }
     });
 
     // Transform the response to only include relevant data
     const data = response.data;
-    if (endpoint === 'series') {
-      return data.map(series => ({
+    const formattedData = data.map(series => ({
         id: series.id,
-        title: series.title,
-        year: series.year,
-        status: series.status,
-        monitored: series.monitored,
-        qualityProfile: series.qualityProfileId,
-        path: series.path
+        title: series.title
       }));
-    } else if (endpoint.startsWith('series/')) {
-      return {
-        id: data.id,
-        title: data.title,
-        year: data.year,
-        status: data.status,
-        monitored: data.monitored,
-        qualityProfile: data.qualityProfileId,
-        path: data.path,
-        seasons: data.seasons.map(season => ({
-          seasonNumber: season.seasonNumber,
-          monitored: season.monitored,
-          statistics: season.statistics
-        }))
-      };
-    }
-    return data;
+    console.log(formattedData)
+    return formattedData;
   } catch (error) {
     console.error('Sonarr API Error:', error.message);
     throw new Error(`Failed to fetch data from Sonarr: ${error.message}`);
